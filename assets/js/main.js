@@ -3,8 +3,8 @@
 
 
 populateLastUpdated({{site.data.l2safety.epoch}});
-enableTooltips();
 updateLinkTargets();
+enableTooltips();
 
 
 function populateLastUpdated(dataEpoch) {

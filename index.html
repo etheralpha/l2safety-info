@@ -64,27 +64,27 @@ layout: default
                     <td scope="row">{{l2.name | replace: "-", " "}}</td>
                     <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
                     <td data-subscore={{l2.state_validation.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}">
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
                         {{site.data.symbol-conversion[l2.state_validation.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.data_availability.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}">
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
                         {{site.data.symbol-conversion[l2.data_availability.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.exit_window.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}">
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
                         {{site.data.symbol-conversion[l2.exit_window.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.sequencer_failure.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}">
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
                         {{site.data.symbol-conversion[l2.sequencer_failure.color]}}
                       </span>
                       </td>
                     <td data-subscore={{l2.proposer_failure.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}">
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
                         {{site.data.symbol-conversion[l2.proposer_failure.color]}}
                       </span>
                     </td>
