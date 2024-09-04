@@ -1,0 +1,135 @@
+:root {
+  --l2s-bg-primary: #1d1e22;
+  --l2s-bg-body: #131215;
+  --l2s-bg-secondary: #393c43;
+  --l2s-accent: rgba(189, 17, 79, 1);
+  --l2s-accent-dark: rgba(189, 17, 79, 0.9);
+  --l2s-line-color: #393c43;
+  --l2s-radius: 0.5625rem;
+}
+
+
+.l2s-bg-primary {
+  background-color: var(--l2s-bg-primary);
+}
+.l2s-bg-dark {
+  background-color: var(--l2s-bg-body);
+}
+.l2s-bg-secondary {
+  background-color: var(--l2s-bg-secondary);
+}
+.l2s-text-accent {
+  color: var(--l2s-accent);
+}
+.l2s-text-accent-dark {
+  color: var(--l2s-accent-dark);
+}
+.l2s-border-color {
+  border-color: var(--l2s-line-color) !important;
+}
+.l2s-radius {
+  border-radius: var(--l2s-radius);
+}
+.opacity-100 { opacity: 100% }
+.opacity-75 { opacity: 75% }
+.opacity-50 { opacity: 50% }
+.opacity-25 { opacity: 25% }
+
+
+html, body {
+  font-family: Roboto, Arial, sans-serif;
+  background-color: var(--l2s-bg-body);
+}
+.lead {
+  font-size: 1.15rem;
+}
+a {
+  color: var(--l2s-accent) !important;
+}
+a:hover,
+a:visited {
+  color: var(--l2s-accent-dark) !important;
+}
+
+
+.form-control,
+.form-control:focus {
+  background-color: var(--l2s-bg-body);
+  border-color: var(--l2s-line-color);
+  color: var(--l2s-accent);
+}
+.btn,
+.btn-check {
+  color: #fff;
+  border-radius: var(--l2s-radius);
+  border-color: var(--l2s-line-color);
+}
+.btn-check+.btn:hover,
+.btn:hover {
+  color: #fff;
+  border-color: var(--l2s-line-color);
+}
+.btn-check:checked+.btn,
+.btn.active,
+.btn.show,
+.btn:first-child:active,
+:not(.btn-check)+.btn:active {
+  background-color: var(--l2s-bg-secondary);
+  border-color: var(--l2s-line-color);
+  color: #fff;
+}
+
+
+.table {
+  color: #fff;
+  border-color: var(--l2s-line-color);
+}
+tbody td, tbody th {
+  font-weight: normal;
+}
+tbody td {
+  text-wrap: nowrap !important;
+}
+tbody tr:first-child td {
+  padding-top: 1rem;
+}
+td:not(:first-child),
+th:not(:first-child) {
+  text-align: center;
+}
+
+/*lock header and first column on scroll*/
+@media screen and (max-width: 991px) {
+	.table-responsive {
+		max-height: 90vh;
+	  overflow: scroll;
+	}
+}
+.table>thead {
+	background-color: var(--l2s-bg-primary);
+	position: sticky;
+	top: -1px;
+	z-index: 1020;
+}
+.table th:first-child,
+.table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: var(--l2s-bg-primary);
+  width: 10rem;
+}
+
+/*wrap first column if too long*/
+table tr td:first-child {
+  max-width: 40vw !important;
+  word-wrap: normal;
+  text-wrap: unset !important;
+}
+/*highlight row on hover*/
+tr:focus td,
+tr:active td,
+tr:hover td {
+  background-color: var(--l2s-bg-secondary) !important;
+}
+
+

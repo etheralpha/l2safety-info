@@ -38,7 +38,7 @@ DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK")
 
 
 
-def fetch(url, method="GET", payload={}, headers={}, retries=2, delay=0, retry_delay=0, context="", data_type="json"):
+def fetch(url, method="GET", payload={}, headers={}, retries=2, delay=0, retry_delay=0.5, context="", data_type="json"):
   log(f"Fetch: {url}")
   response = {"status": 0, "attempts": 0, "data": None}
   try: 
@@ -188,7 +188,7 @@ def pprint(data):
   pp.pprint(data)
 
 
-def sendDiscordMsg(webhook, msg):
+def sendDiscordMsg(msg):
   if use_test_data:
     print(msg)
   else:
@@ -198,7 +198,7 @@ def sendDiscordMsg(webhook, msg):
     try:
       while (attempts < 3) and (status < 200 or status >= 300):
         attempts += 1
-        r = requests.post(webhook, json=data)
+        r = requests.post(DISCORD_WEBHOOK, json=data)
         status = r.status_code
     except Exception as error:
       report_error(error, f"sendDiscordMsg: {msg}")

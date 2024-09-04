@@ -1,0 +1,105 @@
+---
+layout: default
+---
+
+
+<!-- Header -->
+<header>
+  <div class="container mt-5 text-center text-white">
+    <img src="assets/img/logo.png" class="mb-3" style="width: 20rem; max-width: 60vw;">
+    <div class="col-lg-7 mx-auto mb-3">
+      <p class="lead mb-0">A simplified view of L2 risks</p>
+      <small class="fst-italic opacity-75">
+        Data sourced from <a href="https://l2beat.com">L2Beat</a>
+        <span id="lastUpdated" data-epoch={{site.data.l2safety.epoch}}></span>
+      </small>
+    </div>
+  </div>
+</header>
+
+
+<!-- Content -->
+<section class="">
+  <div class="container pt-3 pt-sm-4 pt-lg-5 pb-5">
+      <div class="card mx-auto l2s-radius l2s-bg-primary" style="max-width: 60rem;">
+        <div class="card-body my-3 mx-0 mx-sm-2 mx-md-3">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">L2</th>
+                  <!-- <th scope="col">Score</th> -->
+                  <th scope="col">State Validation</th>
+                  <th scope="col">Data Availability</th>
+                  <th scope="col">Exit Window</th>
+                  <th scope="col">Proposer Failure</th>
+                  <th scope="col">Sequencer Failure</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- comment -%}
+                <!-- 
+                  example entry
+                  {
+                    "name":"fuelv1",
+                    "stage":"Stage 2",
+                    "layer":"L2",
+                    "state_validation":{"status":"Fraud proofs (1R)","color":"white","score":3},
+                    "data_availability":{"status":"On chain","color":"white","score":3},
+                    "exit_window":{"status":"∞","color":"white","score":3},
+                    "sequencer_failure":{"status":"Self sequence","color":"white","score":3},
+                    "proposer_failure":{"status":"Self propose","color":"white","score":3},
+                    "checkmarks":5,
+                    "score":15
+                  }
+                 -->
+                {%- endcomment -%}
+                {%- for l2 in site.data.l2safety.data -%}
+                  {%- assign color = "" -%}
+                  {%- if l2.stage == "in review" -%}
+                    {%- assign color = "text-muted" -%}
+                  {%- endif -%}
+                  <tr class="{{color}}" data-id="{{l2.id}}" data-score={{l2.score}}>
+                    <td scope="row">{{l2.name | replace: "-", " "}}</td>
+                    <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
+                    <td data-subscore={{l2.state_validation.score}}>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}">
+                        {{site.data.symbol-conversion[l2.state_validation.color]}}
+                      </span>
+                    </td>
+                    <td data-subscore={{l2.data_availability.score}}>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}">
+                        {{site.data.symbol-conversion[l2.data_availability.color]}}
+                      </span>
+                    </td>
+                    <td data-subscore={{l2.exit_window.score}}>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}">
+                        {{site.data.symbol-conversion[l2.exit_window.color]}}
+                      </span>
+                    </td>
+                    <td data-subscore={{l2.sequencer_failure.score}}>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}">
+                        {{site.data.symbol-conversion[l2.sequencer_failure.color]}}
+                      </span>
+                      </td>
+                    <td data-subscore={{l2.proposer_failure.score}}>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}">
+                        {{site.data.symbol-conversion[l2.proposer_failure.color]}}
+                      </span>
+                    </td>
+                    <td>{{l2.stage | titlecase}}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+          <p class="text-center mb-0 d-lg-none">
+            <small class="text-muted opacity-75">(scroll table)</small>
+          </p>
+        </div>
+      </div>
+  </div>
+</section>
+
+
