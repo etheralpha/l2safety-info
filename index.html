@@ -29,6 +29,7 @@ layout: default
                 <tr>
                   <th scope="col">L2</th>
                   <!-- <th scope="col">Score</th> -->
+                  <th scope="col">TVL</th>
                   <th scope="col">State Validation</th>
                   <th scope="col">Data Availability</th>
                   <th scope="col">Exit Window</th>
@@ -65,29 +66,30 @@ layout: default
                       <a class="text-light {{color}}" href="https://l2beat.com/scaling/projects/{{l2.id}}">{{l2.name | replace: "-", " "}}</a>
                     </td>
                     <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
+                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}" style="opacity:90%;">${{l2.tvl.str}}</td>
                     <td data-subscore={{l2.state_validation.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.state_validation.color]}}
+                        {{site.data.risk-symbol-conversion[l2.state_validation.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.data_availability.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.data_availability.color]}}
+                        {{site.data.risk-symbol-conversion[l2.data_availability.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.exit_window.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.exit_window.color]}}
+                        {{site.data.risk-symbol-conversion[l2.exit_window.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.sequencer_failure.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.sequencer_failure.color]}}
+                        {{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}
                       </span>
                       </td>
                     <td data-subscore={{l2.proposer_failure.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.proposer_failure.color]}}
+                        {{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}
                       </span>
                     </td>
                     <td>{{l2.stage | titlecase}}</td>

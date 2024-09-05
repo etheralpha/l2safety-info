@@ -225,3 +225,29 @@ def get_risk_score(color):
     return 2
   if color == "white":
     return 3
+
+def get_tvl_color(tvl):
+  if tvl < 5000000:
+    return "red"
+  elif tvl < 100000000:
+    return "yellow"
+  else:
+    return "white"
+
+
+def convert_tvl(tvl_str):
+  if len(tvl_str) > 10:
+    return 0
+  if " " in tvl_str:
+    val = tvl_str.split(" ")[0]
+    unit = tvl_str.split(" ")[1]
+    if unit.lower() == "k":
+      val = float(val) * 1000
+    if unit.lower() == "m":
+      val = float(val) * 1000000
+    if unit.lower() == "b":
+      val = float(val) * 1000000000
+  else:
+    val = float(tvl_str)
+  return val
+
