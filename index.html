@@ -30,6 +30,7 @@ layout: default
                   <th scope="col">L2</th>
                   <!-- <th scope="col">Score</th> -->
                   <th scope="col">TVL</th>
+                  <!-- <th scope="col">Type</th> -->
                   <th scope="col">State Validation</th>
                   <th scope="col">Data Availability</th>
                   <th scope="col">Exit Window</th>
@@ -54,6 +55,8 @@ layout: default
                     "checkmarks":5,
                     "score":15
                   }
+
+                  &#8203; is used to avoid a js error if the tooltip is empty
                  -->
                 {%- endcomment -%}
                 {%- for l2 in site.data.l2safety.data -%}
@@ -67,6 +70,7 @@ layout: default
                     </td>
                     <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
                     <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}" style="opacity:90%;">${{l2.tvl.str}}</td>
+                    <!-- <td>{{l2.type}}</td> -->
                     <td data-subscore={{l2.state_validation.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
                         {{site.data.risk-symbol-conversion[l2.state_validation.color]}}
@@ -92,7 +96,15 @@ layout: default
                         {{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}
                       </span>
                     </td>
-                    <td>{{l2.stage | titlecase}}</td>
+                    {%- assign stage = l2.stage | titlecase -%}
+                    {%- if l2.stage == "-" -%}
+                      {%- assign stage = "n/a" -%}
+                    {%- endif -%}
+                    <td>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.type | titlecase}}&#8203;">
+                        {{stage}}
+                      </span>
+                    </td>
                   </tr>
                 {%- endfor -%}
               </tbody>

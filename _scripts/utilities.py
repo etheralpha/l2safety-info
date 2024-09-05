@@ -231,8 +231,10 @@ def get_tvl_color(tvl):
     return "red"
   elif tvl < 100000000:
     return "yellow"
-  else:
+  elif tvl < 500000000:
     return "white"
+  else:
+    return "green"
 
 
 def convert_tvl(tvl_str):

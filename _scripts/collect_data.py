@@ -7,6 +7,7 @@ def run_app():
   l2_count = 0
   scraping_errors = {
     "name": 0,
+    "type": 0,
     "state_validation": 0,
     "data_availability": 0,
     "exit_window": 0,
@@ -30,6 +31,7 @@ def run_app():
     project_risk = {
       "id": project,
       "name": project,
+      "type": None,
       "stage": None,
       "layer": "L2",
       "state_validation": { "status": None, "color": None, "score": 0 },
@@ -51,7 +53,22 @@ def run_app():
     else:
       scraping_errors["name"] += 1
 
-    # stage, layer, score modifier
+    # type
+    if ">Type</span>" in project_source:
+      project_type = project_source.split(">Type</span>")[1].split("</span>")[0].split(">")[-1].lower()
+      project_risk["type"] = project_type
+    else:
+      scraping_errors["type"] += 1
+
+    # layer
+    if "rollup" in project_risk["type"]:
+      project_risk["layer"] = "L2"
+    elif "validium" in project_risk["type"]:
+      project_risk["layer"] = "L2"
+    else:
+      project_risk["layer"] = "L3"
+
+    # stage, score modifier
     # no stage if it's an L3
     if "id=\"stage\"" in project_source:
       stage = project_source.split("id=\"stage\"")[1].split("</span></span>")[0].split(">")[-1].lower()
@@ -62,8 +79,7 @@ def run_app():
         project_risk["score"] += 3
       l2_count += 1
     else:
-      project_risk["stage"] = "-"
-      project_risk["layer"] = "L3"
+      project_risk["stage"] = "-"\
 
     # risks, checkmarks, score
     # no risk evaluations if in review
@@ -143,8 +159,13 @@ def run_app():
       utilities.sendDiscordMsg(f"{key} scraping errors")
 
 
+  # save all data
+  if not utilities.use_test_data:
+    utilities.save_to_file(f"_data/l2safety_all.json", {"epoch":utilities.current_time, "data":risk_data}, context=f"save_risk_data")
+
+
   # clean data
-  # remove if not an L2
+  # remove if not L2
   risk_data = [project for project in risk_data if project["layer"] == "L2"]
   # remove if doesn't have at least 1 checkmark
   risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"] == "in review")]
@@ -152,7 +173,7 @@ def run_app():
   risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvl"]["val"]), reverse=True)
 
 
-  # save data
+  # save filtered/sorted data
   if not utilities.use_test_data:
     utilities.save_to_file(f"_data/l2safety.json", {"epoch":utilities.current_time, "data":risk_data}, context=f"save_risk_data")
   # utilities.pprint(risk_data)
