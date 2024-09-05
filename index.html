@@ -10,7 +10,7 @@ layout: default
     <div class="col-lg-7 mx-auto mb-3">
       <p class="lead mb-0">A simplified view of Ethereum Layer 2 risks</p>
       <small class="fst-italic opacity-75">
-        Data sourced from <a href="https://l2beat.com">L2Beat</a>
+        Data sourced from <a class="link" href="https://l2beat.com">L2Beat</a>
         <span id="lastUpdated" data-epoch={{site.data.l2safety.epoch}}></span>
       </small>
     </div>
@@ -61,7 +61,9 @@ layout: default
                     {%- assign color = "text-muted" -%}
                   {%- endif -%}
                   <tr class="{{color}}" data-id="{{l2.id}}" data-score={{l2.score}}>
-                    <td scope="row">{{l2.name | replace: "-", " "}}</td>
+                    <td scope="row">
+                      <a class="text-light {{color}}" href="https://l2beat.com/scaling/projects/{{l2.id}}">{{l2.name | replace: "-", " "}}</a>
+                    </td>
                     <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
                     <td data-subscore={{l2.state_validation.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">

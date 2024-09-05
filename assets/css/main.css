@@ -43,11 +43,11 @@ html, body {
 .lead {
   font-size: 1.15rem;
 }
-a {
+.link {
   color: var(--l2s-accent) !important;
 }
-a:hover,
-a:visited {
+.link:hover,
+.link:visited {
   color: var(--l2s-accent-dark) !important;
 }
 
