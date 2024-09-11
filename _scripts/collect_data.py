@@ -170,7 +170,9 @@ def run_app():
   # remove if doesn't have at least 1 checkmark
   risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"] == "in review")]
   # sort by score then by tvl
-  risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvl"]["val"]), reverse=True)
+  # risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvl"]["val"]), reverse=True)
+  # sort by tvl then by score
+  risk_data = sorted(risk_data, key=lambda project: (project["tvl"]["val"], project["score"]), reverse=True)
 
 
   # save filtered/sorted data
