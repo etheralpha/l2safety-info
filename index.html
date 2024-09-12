@@ -10,7 +10,7 @@ layout: default
     <div class="col-lg-7 mx-auto mb-3">
       <p class="lead mb-0">A simplified view of Ethereum Layer 2 risks</p>
       <small class="fst-italic opacity-75">
-        Data sourced from <a href="https://l2beat.com">L2Beat</a>
+        Data sourced from <a class="link" href="https://l2beat.com">L2Beat</a>
         <span id="lastUpdated" data-epoch={{site.data.l2safety.epoch}}></span>
       </small>
     </div>
@@ -29,6 +29,8 @@ layout: default
                 <tr>
                   <th scope="col">L2</th>
                   <!-- <th scope="col">Score</th> -->
+                  <th scope="col">TVL</th>
+                  <!-- <th scope="col">Type</th> -->
                   <th scope="col">State Validation</th>
                   <th scope="col">Data Availability</th>
                   <th scope="col">Exit Window</th>
@@ -53,6 +55,8 @@ layout: default
                     "checkmarks":5,
                     "score":15
                   }
+
+                  &#8203; is used to avoid a js error if the tooltip is empty
                  -->
                 {%- endcomment -%}
                 {%- for l2 in site.data.l2safety.data -%}
@@ -61,34 +65,46 @@ layout: default
                     {%- assign color = "text-muted" -%}
                   {%- endif -%}
                   <tr class="{{color}}" data-id="{{l2.id}}" data-score={{l2.score}}>
-                    <td scope="row">{{l2.name | replace: "-", " "}}</td>
+                    <td scope="row">
+                      <a class="text-light {{color}}" href="https://l2beat.com/scaling/projects/{{l2.id}}">{{l2.name | replace: "-", " "}}</a>
+                    </td>
                     <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
+                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}" style="opacity:90%;">${{l2.tvl.str}}</td>
+                    <!-- <td>{{l2.type}}</td> -->
                     <td data-subscore={{l2.state_validation.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.state_validation.color]}}
+                        {{site.data.risk-symbol-conversion[l2.state_validation.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.data_availability.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.data_availability.color]}}
+                        {{site.data.risk-symbol-conversion[l2.data_availability.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.exit_window.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.exit_window.color]}}
+                        {{site.data.risk-symbol-conversion[l2.exit_window.color]}}
                       </span>
                     </td>
                     <td data-subscore={{l2.sequencer_failure.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.sequencer_failure.color]}}
+                        {{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}
                       </span>
                       </td>
                     <td data-subscore={{l2.proposer_failure.score}}>
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
-                        {{site.data.symbol-conversion[l2.proposer_failure.color]}}
+                        {{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}
                       </span>
                     </td>
-                    <td>{{l2.stage | titlecase}}</td>
+                    {%- assign stage = l2.stage | titlecase -%}
+                    {%- if l2.stage == "-" -%}
+                      {%- assign stage = "n/a" -%}
+                    {%- endif -%}
+                    <td>
+                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.type | titlecase}}&#8203;">
+                        {{stage}}
+                      </span>
+                    </td>
                   </tr>
                 {%- endfor -%}
               </tbody>
