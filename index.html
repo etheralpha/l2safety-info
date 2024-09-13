@@ -61,7 +61,7 @@ layout: default
                 {%- endcomment -%}
                 {%- for l2 in site.data.l2safety.data -%}
                   {%- assign color = "" -%}
-                  {%- if l2.stage == "in review" -%}
+                  {%- if l2.stage.status == "in review" -%}
                     {%- assign color = "text-muted" -%}
                   {%- endif -%}
                   <tr class="{{color}}" data-id="{{l2.id}}" data-score={{l2.score}}>
@@ -69,40 +69,26 @@ layout: default
                       <a class="text-light {{color}}" href="https://l2beat.com/scaling/projects/{{l2.id}}">{{l2.name | replace: "-", " "}}</a>
                     </td>
                     <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
-                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}" style="opacity:90%;">${{l2.tvl.str}}</td>
+                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}">${{l2.tvl.str}}</td>
                     <!-- <td>{{l2.type}}</td> -->
                     <td data-subscore={{l2.state_validation.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.state_validation.color]}}
-                      </span>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.state_validation.color]}}" data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
                     </td>
                     <td data-subscore={{l2.data_availability.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.data_availability.color]}}
-                      </span>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.data_availability.color]}}" data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
                     </td>
                     <td data-subscore={{l2.exit_window.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.exit_window.color]}}
-                      </span>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.exit_window.color]}}" data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
                     </td>
                     <td data-subscore={{l2.sequencer_failure.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}
-                      </span>
-                      </td>
-                    <td data-subscore={{l2.proposer_failure.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}
-                      </span>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}" data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
                     </td>
-                    {%- assign stage = l2.stage | titlecase -%}
-                    {%- if l2.stage == "-" -%}
-                      {%- assign stage = "n/a" -%}
-                    {%- endif -%}
-                    <td>
+                    <td data-subscore={{l2.proposer_failure.score}}>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}" data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
+                    </td>
+                    <td class="text-{{site.data.risk-color-conversion[l2.stage.color]}} {{color}}">
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.type | titlecase}}&#8203;">
-                        {{stage}}
+                        {{l2.stage.status | titlecase | replace: "N/a", "n/a" }}
                       </span>
                     </td>
                   </tr>
