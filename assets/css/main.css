@@ -109,7 +109,7 @@ th:not(:first-child) {
 	background-color: var(--l2s-bg-primary);
 	position: sticky;
 	top: -1px;
-	z-index: 1020;
+	z-index: 2;
 }
 .table th:first-child,
 .table td:first-child {
@@ -117,6 +117,7 @@ th:not(:first-child) {
   left: 0;
   background-color: var(--l2s-bg-primary);
   width: 10rem;
+  z-index: 1;
 }
 
 /*wrap first column if too long*/
