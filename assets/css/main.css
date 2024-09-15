@@ -165,3 +165,7 @@ table img {
   max-width: 1.1rem !important;
 }
 
+.sort svg {
+  margin-top: -3px;
+  cursor: pointer;
+}
