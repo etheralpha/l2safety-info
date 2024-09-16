@@ -1,3 +1,12 @@
-white: 🟢
-yellow: 🟡
-red: 🔴
+# white: 🟢
+# yellow: 🟡
+# red: 🔴
+
+# white: ✅
+# yellow: ⚠️
+# red: 🚫
+
+# using images because emojis appear differently on different platforms
+white: symbol-success.png
+yellow: symbol-warning.png
+red: symbol-danger.png

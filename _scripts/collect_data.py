@@ -32,7 +32,7 @@ def run_app():
       "id": project,
       "name": project,
       "type": None,
-      "stage": None,
+      "stage": { "status": None, "color": None, "score": 0 },
       "layer": "L2",
       "state_validation": { "status": None, "color": None, "score": 0 },
       "data_availability": { "status": None, "color": None, "score": 0 },
@@ -72,18 +72,27 @@ def run_app():
     # no stage if it's an L3
     if "id=\"stage\"" in project_source:
       stage = project_source.split("id=\"stage\"")[1].split("</span></span>")[0].split(">")[-1].lower()
-      project_risk["stage"] = stage
+      project_risk["stage"]["status"] = stage
+      if stage == "stage 0":
+        project_risk["stage"]["color"] = "red"
       if stage == "stage 1":
+        project_risk["stage"]["color"] = "yellow"
+        project_risk["stage"]["score"] += 1.5
         project_risk["score"] += 1.5
       if stage == "stage 2":
+        project_risk["stage"]["color"] = "green"
+        project_risk["stage"]["score"] += 3
         project_risk["score"] += 3
+      if stage == "in review":
+        project_risk["stage"]["color"] = "gray"
       l2_count += 1
     else:
-      project_risk["stage"] = "-"\
+      project_risk["stage"]["status"] = "n/a"
+      project_risk["stage"]["color"] = "white"
 
     # risks, checkmarks, score
     # no risk evaluations if in review
-    if project_risk["stage"] != "in review":
+    if project_risk["stage"]["status"] != "in review":
       # state_validation
       if ">State validation</h3>" in project_source:
         project_risk["state_validation"]["status"] = project_source.split(">State validation</h3>")[1].split("</span>")[0].split(">")[-1]
@@ -168,7 +177,7 @@ def run_app():
   # remove if not L2
   risk_data = [project for project in risk_data if project["layer"] == "L2"]
   # remove if doesn't have at least 1 checkmark
-  risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"] == "in review")]
+  risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"]["status"] == "in review")]
   # sort by score then by tvl
   # risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvl"]["val"]), reverse=True)
   # sort by tvl then by score

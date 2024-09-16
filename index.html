@@ -21,22 +21,72 @@ layout: default
 <!-- Content -->
 <section class="">
   <div class="container pt-3 pt-sm-4 pt-lg-5 pb-5">
-      <div class="card mx-auto l2s-radius l2s-bg-primary" style="max-width: 60rem;">
+      <div class="card mx-auto l2s-radius l2s-bg-primary" style="max-width: 63rem;">
         <div class="card-body my-3 mx-0 mx-sm-2 mx-md-3">
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">L2</th>
-                  <!-- <th scope="col">Score</th> -->
-                  <th scope="col">TVL</th>
-                  <!-- <th scope="col">Type</th> -->
-                  <th scope="col">State Validation</th>
-                  <th scope="col">Data Availability</th>
-                  <th scope="col">Exit Window</th>
-                  <th scope="col">Proposer Failure</th>
-                  <th scope="col">Sequencer Failure</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">
+                    L2
+                    <span class="sort" onclick="sortTable(this, 'l2', 1)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col">
+                    TVL
+                    <span class="sort" onclick="sortTable(this, 'tvl', 2)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col" style="width: 8rem; min-width: 8rem;">
+                    State Validation
+                    <span class="sort float-end" onclick="sortTable(this, 'stateValidation', 3)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col" style="width: 8rem; min-width: 8rem;">
+                    Data Availability
+                    <span class="sort float-end" onclick="sortTable(this, 'dataAvailability', 4)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col" style="width: 6rem; min-width: 6rem;">
+                    Exit Window
+                    <span class="sort float-end" onclick="sortTable(this, 'exitWindow', 5)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col" style="width: 7rem; min-width: 7rem;">
+                    Proposer Failure
+                    <span class="sort float-end" onclick="sortTable(this, 'proposerFailure', 6)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col" style="width: 7rem; min-width: 7rem;">
+                    Sequencer Failure
+                    <span class="sort float-end" onclick="sortTable(this, 'sequencerFailure', 7)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <th scope="col">
+                    Status
+                    <span class="sort" onclick="sortTable(this, 'status', 8)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th>
+                  <!-- <th scope="col">
+                    Type
+                    <span class="sort" onclick="sortTable(this, 'type', 9)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th> -->
+                  <!-- <th scope="col">
+                    Score
+                    <span class="sort" onclick="sortTable(this, 'score', 10)">
+                      {{site.data.icons.sort}}
+                    </span>
+                  </th> -->
                 </tr>
               </thead>
               <tbody>
@@ -61,50 +111,43 @@ layout: default
                 {%- endcomment -%}
                 {%- for l2 in site.data.l2safety.data -%}
                   {%- assign color = "" -%}
-                  {%- if l2.stage == "in review" -%}
+                  {%- if l2.stage.status == "in review" -%}
                     {%- assign color = "text-muted" -%}
                   {%- endif -%}
                   <tr class="{{color}}" data-id="{{l2.id}}" data-score={{l2.score}}>
-                    <td scope="row">
-                      <a class="text-light {{color}}" href="https://l2beat.com/scaling/projects/{{l2.id}}">{{l2.name | replace: "-", " "}}</a>
+                    <td data-sort="{{l2.name}}" scope="row">
+                      <a class="text-light {{color}}" href="https://l2beat.com/scaling/projects/{{l2.id}}">
+                        {{l2.name | replace: "-", " "}}
+                      </a>
                     </td>
-                    <!-- <td>{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
-                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}" style="opacity:90%;">${{l2.tvl.str}}</td>
-                    <!-- <td>{{l2.type}}</td> -->
-                    <td data-subscore={{l2.state_validation.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.state_validation.color]}}
-                      </span>
+                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}">${{l2.tvl.str}}</td>
+                    <td data-sort={{l2.state_validation.score}}>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.state_validation.color]}}" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
                     </td>
-                    <td data-subscore={{l2.data_availability.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.data_availability.color]}}
-                      </span>
+                    <td data-sort={{l2.data_availability.score}}>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.data_availability.color]}}" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
                     </td>
-                    <td data-subscore={{l2.exit_window.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.exit_window.color]}}
-                      </span>
+                    <td data-sort={{l2.exit_window.score}}>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.exit_window.color]}}" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
                     </td>
-                    <td data-subscore={{l2.sequencer_failure.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}
-                      </span>
-                      </td>
-                    <td data-subscore={{l2.proposer_failure.score}}>
-                      <span data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
-                        {{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}
-                      </span>
+                    <td data-sort={{l2.sequencer_failure.score}}>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
                     </td>
-                    {%- assign stage = l2.stage | titlecase -%}
-                    {%- if l2.stage == "-" -%}
-                      {%- assign stage = "n/a" -%}
-                    {%- endif -%}
-                    <td>
+                    <td data-sort={{l2.proposer_failure.score}}>
+                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
+                    </td>
+                    <td data-sort="{{l2.stage.status}}" class="text-{{site.data.risk-color-conversion[l2.stage.color]}} {{color}}">
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.type | titlecase}}&#8203;">
-                        {{stage}}
+                        {{l2.stage.status | titlecase | replace: "N/a", "n/a" }}
                       </span>
                     </td>
+                    <!-- <td data-sort="{{l2.type}}">{{l2.type}}</td> -->
+                    <!-- <td data-sort="{{l2.score}}">{{l2.score | divided_by: 18.0 | times: 100 | round}}</td> -->
                   </tr>
                 {%- endfor -%}
               </tbody>
@@ -117,5 +160,4 @@ layout: default
       </div>
   </div>
 </section>
-
 
