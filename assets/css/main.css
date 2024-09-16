@@ -8,7 +8,8 @@
   --l2s-radius: 0.5625rem;
   --l2s-success: #1d7d4f;
   --l2s-warning: #eab116;
-  --l2s-danger: #ca3341;
+  /*--l2s-danger: #ca3341;*/
+  --l2s-danger: #dd1426;
   --l2s-light: #f8f9fa;
   --l2s-dark: #212529;
   --l2s-gray: #6c757d;
