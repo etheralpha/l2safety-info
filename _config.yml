@@ -15,9 +15,6 @@ plugins:
 redirect_from: # jekyll-redirect-from
   json: false
 
-# Global variables
-analytics_tag: 
-
 # Navigation
 nav_enabled: false
 
