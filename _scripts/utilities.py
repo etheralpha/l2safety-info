@@ -19,8 +19,8 @@ print(f"Epoch: {current_time}")
 print(f"Date: {date}")
 
 pp = pprint.PrettyPrinter(indent=4)
-use_test_data = True
-# use_test_data = False
+# use_test_data = True
+use_test_data = False
 save_file = True
 # save_file = False
 print_logs = True
@@ -210,7 +210,7 @@ def sendDiscordMsg(msg):
 
 def get_risk_color(sentiment):
   if sentiment == "good":
-    return "white"
+    return "success"
   elif sentiment == "warning":
     return "warning"
   elif sentiment == "bad":

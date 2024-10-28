@@ -7,6 +7,7 @@ def run_app():
 
   if utilities.use_test_data:
     summary_data = utilities.read_file(f"_data/l2beat_summary.json", context="read_summary_data")
+    summary_data = summary_data["data"]
     # utilities.log(summary_data, context="summary_data")
   else:
     summary_data = utilities.fetch("https://l2beat.com/api/scaling/summary",  context="fetch_l2beat_summary", data_type="json")
@@ -19,9 +20,9 @@ def run_app():
       return
 
   # print(summary_data["data"]["data"]["projects"])
-  for project_details in summary_data["data"]["data"]["projects"]:
-    project = summary_data["data"]["data"]["projects"][project_details]
-    print(project)
+  for project_details in summary_data["data"]["projects"]:
+    project = summary_data["data"]["projects"][project_details]
+    # print(project)
     # details example
     #   {
     #     "id":"arbitrum",
@@ -169,7 +170,7 @@ def run_app():
             else:
               project_risk["state_validation"]["note"] = f"{risk['value']}: {risk['description']}"
             project_risk["state_validation"]["score"] = utilities.get_risk_score(risk["sentiment"])
-            if project_risk["state_validation"]["color"] == "white":
+            if project_risk["state_validation"]["color"] == "success":
               project_risk["checkmarks"] += 1
             project_risk["score"] += project_risk["state_validation"]["score"]
           # data_availability
@@ -181,7 +182,7 @@ def run_app():
             else:
               project_risk["data_availability"]["note"] = f"{risk['value']}: {risk['description']}"
             project_risk["data_availability"]["score"] = utilities.get_risk_score(risk["sentiment"])
-            if project_risk["data_availability"]["color"] == "white":
+            if project_risk["data_availability"]["color"] == "success":
               project_risk["checkmarks"] += 1
             project_risk["score"] += project_risk["data_availability"]["score"]
           # exit_window
@@ -193,7 +194,7 @@ def run_app():
             else:
               project_risk["exit_window"]["note"] = f"{risk['value']}: {risk['description']}"
             project_risk["exit_window"]["score"] = utilities.get_risk_score(risk["sentiment"])
-            if project_risk["exit_window"]["color"] == "white":
+            if project_risk["exit_window"]["color"] == "success":
               project_risk["checkmarks"] += 1
             project_risk["score"] += project_risk["exit_window"]["score"]
           # sequencer_failure
@@ -205,7 +206,7 @@ def run_app():
             else:
               project_risk["sequencer_failure"]["note"] = f"{risk['value']}: {risk['description']}"
             project_risk["sequencer_failure"]["score"] = utilities.get_risk_score(risk["sentiment"])
-            if project_risk["sequencer_failure"]["color"] == "white":
+            if project_risk["sequencer_failure"]["color"] == "success":
               project_risk["checkmarks"] += 1
             project_risk["score"] += project_risk["sequencer_failure"]["score"]
           # proposer_failure
@@ -217,7 +218,7 @@ def run_app():
             else:
               project_risk["proposer_failure"]["note"] = f"{risk['value']}: {risk['description']}"
             project_risk["proposer_failure"]["score"] = utilities.get_risk_score(risk["sentiment"])
-            if project_risk["proposer_failure"]["color"] == "white":
+            if project_risk["proposer_failure"]["color"] == "success":
               project_risk["checkmarks"] += 1
             project_risk["score"] += project_risk["proposer_failure"]["score"]
           else:

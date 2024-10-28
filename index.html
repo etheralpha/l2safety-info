@@ -120,28 +120,28 @@ layout: default
                         {{l2.name | replace: "-", " "}}
                       </a>
                     </td>
-                    <td class="text-{{site.data.risk-color-conversion[l2.tvl.color]}} {{color}}">${{l2.tvl.str}}</td>
+                    <td class="text-{{l2.tvl.color}} {{color}}">{{l2.tvl.str}}</td>
                     <td data-sort={{l2.state_validation.score}}>
-                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.state_validation.color]}}" 
-                          data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.status}}&#8203;">
+                      <img src="assets/img/symbol-{{l2.state_validation.color}}.png" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.note}}&#8203;">
                     </td>
                     <td data-sort={{l2.data_availability.score}}>
-                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.data_availability.color]}}" 
-                          data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.status}}&#8203;">
+                      <img src="assets/img/symbol-{{l2.data_availability.color}}.png" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.data_availability.note}}&#8203;">
                     </td>
                     <td data-sort={{l2.exit_window.score}}>
-                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.exit_window.color]}}" 
-                          data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.status}}&#8203;">
+                      <img src="assets/img/symbol-{{l2.exit_window.color}}.png" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.exit_window.note}}&#8203;">
                     </td>
                     <td data-sort={{l2.sequencer_failure.score}}>
-                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.sequencer_failure.color]}}" 
-                          data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.status}}&#8203;">
+                      <img src="assets/img/symbol-{{l2.sequencer_failure.color}}.png" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.sequencer_failure.note}}&#8203;">
                     </td>
                     <td data-sort={{l2.proposer_failure.score}}>
-                      <img src="assets/img/{{site.data.risk-symbol-conversion[l2.proposer_failure.color]}}" 
-                          data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.status}}&#8203;">
+                      <img src="assets/img/symbol-{{l2.proposer_failure.color}}.png" 
+                          data-bs-toggle="tooltip" data-bs-title="{{l2.proposer_failure.note}}&#8203;">
                     </td>
-                    <td data-sort="{{l2.stage.status}}" class="text-{{site.data.risk-color-conversion[l2.stage.color]}} {{color}}">
+                    <td data-sort="{{l2.stage.status}}" class="text-{{l2.stage.color}} {{color}}">
                       <span data-bs-toggle="tooltip" data-bs-title="{{l2.type | titlecase}}&#8203;">
                         {{l2.stage.status | titlecase | replace: "N/a", "n/a" }}
                       </span>
