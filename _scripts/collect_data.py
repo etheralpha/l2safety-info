@@ -3,179 +3,243 @@ import utilities
 
 def run_app():
   risk_data = []
-  projects = set()
   l2_count = 0
-  scraping_errors = {
-    "name": 0,
-    "type": 0,
-    "state_validation": 0,
-    "data_availability": 0,
-    "exit_window": 0,
-    "sequencer_failure": 0,
-    "proposer_failure": 0,
-    "tvl": 0
-  }
 
   if utilities.use_test_data:
-    projects = {'arbitrum', 'optimism', 'real', 'eclipse'}
-    # projects = {'fraxtal', 'rhinofi', 'wirex', 'ancient8', 'paradex', 'linea', 'kroma', 'astarzkevm', 'gpt', 'edgeless', 'zksync-lite', 'aevo', 'fuelv1', 'alienx', 'base', 'sxnetwork', 'starknet', 'rss3', 'orderly', 'xterio', 'scroll', 'polygonzkevm', 'mode', 'optimism', 'bob', 'xlayer', 'metal', 'zora', 'hypr', 'kinto', 'karak', 'apex', 'bobanetwork', 'termstructure', 'mantapacific', 'lambda', 'publicgoodsnetwork', 'taiko', 'blast', 'lisk', 'swan', 'cronoszkevm', 'aleph-zero', 'witness', 'zkfair', 'patex', 'derive', 'redsonic', 'real', 'optopia', 'zksync-era', 'metis', 'zkspace', 'arbitrum', 'nova', 'tanx', 'dydx', 'myria', 'mantle', 'silicon', 'mint', 'immutablex', 'zircuit', 'loopring', 'sorare', 'cartesi-honeypot', 'hychain', 'eclipse', 'parallel', 'redstone', 'degate3', 'reya', 'galxegravity', 'cyber'}
+    summary_data = utilities.read_file(f"_data/l2beat_summary.json", context="read_summary_data")
+    summary_data = summary_data["data"]
+    # utilities.log(summary_data, context="summary_data")
   else:
-    dashboard_source = utilities.fetch("https://l2beat.com/scaling/summary",  context="fetch_dashboard_source", data_type="text")["data"]
-    for item in dashboard_source.split('href="/scaling/projects/'):
-      projects.add(item.split('#')[0].split('"')[0])
-    projects.remove("<!DOCTYPE html><html lang=")
-
-
-  for project in projects:
-    print(project)
-    project_risk = {
-      "id": project,
-      "name": project,
-      "type": None,
-      "stage": { "status": None, "color": None, "score": 0 },
-      "layer": "L2",
-      "state_validation": { "status": None, "color": None, "score": 0 },
-      "data_availability": { "status": None, "color": None, "score": 0 },
-      "exit_window": { "status": None, "color": None, "score": 0 },
-      "sequencer_failure": { "status": None, "color": None, "score": 0 },
-      "proposer_failure": { "status": None, "color": None, "score": 0 },
-      "tvl": { "val": 0, "str": "0", "color": None },
-      "checkmarks": 0,
-      "score": 0
-    }
-    source_url = f"https://l2beat.com/scaling/projects/{project}"
-    project_source = utilities.fetch(source_url,  context="fetch_project_source", data_type="text")["data"]
-
-    # name
-    if "<h1" in project_source:
-      name = project_source.split("<h1")[1].split("</span></h1>")[0].split(">")[-1]
-      project_risk["name"] = name
+    summary_data = utilities.fetch("https://l2beat.com/api/scaling/summary",  context="fetch_l2beat_summary", data_type="json")
+    if (summary_data["status"] == 200) and (summary_data["data"]["success"] == True):
+      summary_data = summary_data["data"]
+      utilities.save_to_file(f"_data/l2beat_summary.json", {"epoch":utilities.current_time, "data":summary_data}, context=f"save_summary_data")
+      # utilities.log(summary_data, context="summary_data")
     else:
-      scraping_errors["name"] += 1
+      utilities.report_error("Error: L2Beat summary fetch failed", context="fetch_l2beat_summary")
+      return
 
-    # type
-    if ">Type</span>" in project_source:
-      project_type = project_source.split(">Type</span>")[1].split("</span>")[0].split(">")[-1].lower()
-      project_risk["type"] = project_type
-    else:
-      scraping_errors["type"] += 1
-
-    # layer
-    if "rollup" in project_risk["type"]:
-      project_risk["layer"] = "L2"
-    elif "validium" in project_risk["type"]:
-      project_risk["layer"] = "L2"
-    else:
-      project_risk["layer"] = "L3"
-
-    # stage, score modifier
-    # no stage if it's an L3
-    if "id=\"stage\"" in project_source:
-      stage = project_source.split("id=\"stage\"")[1].split("</span></span>")[0].split(">")[-1].lower()
-      project_risk["stage"]["status"] = stage
-      if stage == "stage 0":
-        project_risk["stage"]["color"] = "red"
-      if stage == "stage 1":
-        project_risk["stage"]["color"] = "yellow"
-        project_risk["stage"]["score"] += 1.5
-        project_risk["score"] += 1.5
-      if stage == "stage 2":
-        project_risk["stage"]["color"] = "green"
-        project_risk["stage"]["score"] += 3
-        project_risk["score"] += 3
-      if stage == "in review":
-        project_risk["stage"]["color"] = "gray"
-      l2_count += 1
-    else:
-      project_risk["stage"]["status"] = "n/a"
-      project_risk["stage"]["color"] = "white"
-
-    # risks, checkmarks, score
-    # no risk evaluations if in review
-    if project_risk["stage"]["status"] != "in review":
-      # state_validation
-      if ">State validation</h3>" in project_source:
-        project_risk["state_validation"]["status"] = project_source.split(">State validation</h3>")[1].split("</span>")[0].split(">")[-1]
-        project_risk["state_validation"]["color"] = utilities.get_risk_color(project_source.split(">State validation</h3>")[1])
-        project_risk["state_validation"]["score"] = utilities.get_risk_score(project_risk["state_validation"]["color"])
-        if project_risk["state_validation"]["color"] == "white":
-          project_risk["checkmarks"] += 1
-        project_risk["score"] += project_risk["state_validation"]["score"]
-      else:
-        scraping_errors["state_validation"] += 1
-      # data_availability
-      if ">Data availability</h3>" in project_source:
-        project_risk["data_availability"]["status"] = project_source.split(">Data availability</h3>")[1].split("</span>")[0].split(">")[-1]
-        project_risk["data_availability"]["color"] = utilities.get_risk_color(project_source.split(">Data availability</h3>")[1])
-        project_risk["data_availability"]["score"] = utilities.get_risk_score(project_risk["data_availability"]["color"])
-        if project_risk["data_availability"]["color"] == "white":
-          project_risk["checkmarks"] += 1
-        project_risk["score"] += project_risk["data_availability"]["score"]
-      else:
-        scraping_errors["data_availability"] += 1
-      # exit_window
-      if ">Exit window</h3>" in project_source:
-        project_risk["exit_window"]["status"] = project_source.split(">Exit window</h3>")[1].split("</span>")[0].split(">")[-1]
-        project_risk["exit_window"]["color"] = utilities.get_risk_color(project_source.split(">Exit window</h3>")[1])
-        project_risk["exit_window"]["score"] = utilities.get_risk_score(project_risk["exit_window"]["color"])
-        if project_risk["exit_window"]["color"] == "white":
-          project_risk["checkmarks"] += 1
-        project_risk["score"] += project_risk["exit_window"]["score"]
-      else:
-        scraping_errors["exit_window"] += 1
-      # sequencer_failure
-      if ">Sequencer failure</h3>" in project_source:
-        project_risk["sequencer_failure"]["status"] = project_source.split(">Sequencer failure</h3>")[1].split("</span>")[0].split(">")[-1]
-        project_risk["sequencer_failure"]["color"] = utilities.get_risk_color(project_source.split(">Sequencer failure</h3>")[1])
-        project_risk["sequencer_failure"]["score"] = utilities.get_risk_score(project_risk["sequencer_failure"]["color"])
-        if project_risk["sequencer_failure"]["color"] == "white":
-          project_risk["checkmarks"] += 1
-        project_risk["score"] += project_risk["sequencer_failure"]["score"]
-      else:
-        scraping_errors["sequencer_failure"] += 1
-      # proposer_failure
-      if ">Proposer failure</h3>" in project_source:
-        project_risk["proposer_failure"]["status"] = project_source.split(">Proposer failure</h3>")[1].split("</span>")[0].split(">")[-1]
-        project_risk["proposer_failure"]["color"] = utilities.get_risk_color(project_source.split(">Proposer failure</h3>")[1])
-        project_risk["proposer_failure"]["score"] = utilities.get_risk_score(project_risk["proposer_failure"]["color"])
-        if project_risk["proposer_failure"]["color"] == "white":
-          project_risk["checkmarks"] += 1
-        project_risk["score"] += project_risk["proposer_failure"]["score"]
-      else:
-        scraping_errors["proposer_failure"] += 1
+  # print(summary_data["data"]["data"]["projects"])
+  for project_details in summary_data["data"]["projects"]:
+    project = summary_data["data"]["projects"][project_details]
+    # print(project)
+    # details example
+    #   {
+    #     "id":"arbitrum",
+    #     "name":"Arbitrum One",
+    #     "slug":"arbitrum",
+    #     "type":"layer2",
+    #     "category":"Optimistic Rollup",
+    #     "provider":"Arbitrum",
+    #     "purposes":[
+    #        "Universal"
+    #     ],
+    #     "isArchived":false,
+    #     "isUpcoming":false,
+    #     "isUnderReview":false,
+    #     "badges":[
+    #        {
+    #           "category":"Stack",
+    #           "name":"Nitro"
+    #        },
+    #        {
+    #           "category":"DA",
+    #           "name":"EthereumBlobs"
+    #        },
+    #        {
+    #           "category":"VM",
+    #           "name":"WasmVM"
+    #        },
+    #        {
+    #           "category":"Other",
+    #           "name":"Governance"
+    #        },
+    #        {
+    #           "category":"Other",
+    #           "name":"L3HostChain"
+    #        },
+    #        {
+    #           "category":"VM",
+    #           "name":"EVM"
+    #        }
+    #     ],
+    #     "tvl":{
+    #        "breakdown":{
+    #           "total":13388231113.45,
+    #           "ether":3950452687.39,
+    #           "stablecoin":4707391645.65,
+    #           "associated":2037539828.32
+    #        },
+    #        "associatedTokens":[
+    #           "ARB"
+    #        ],
+    #        "change7d":-0.026403164144550906
+    #     },
+    #     "stage":"Stage 1",
+    #     "risks":[
+    #        {
+    #           "name":"Sequencer Failure",
+    #           "value":"Self sequence",
+    #           "sentiment":"good",
+    #           "description":"In the event of a sequencer failure, users can force transactions to be included in the project's chain by sending them to L1. There is a 1d delay on this operation."
+    #        },
+    #        {
+    #           "name":"State Validation",
+    #           "value":"Fraud proofs (INT)",
+    #           "sentiment":"warning",
+    #           "description":"Fraud proofs allow 14 WHITELISTED actors watching the chain to prove that the state is incorrect. Interactive proofs (INT) require multiple transactions over time to resolve. There is a 6d 8h challenge period."
+    #        },
+    #        {
+    #           "name":"Data Availability",
+    #           "value":"Onchain",
+    #           "sentiment":"good",
+    #           "description":"All of the data needed for proof construction is published on Ethereum L1."
+    #        },
+    #        {
+    #           "name":"Exit Window",
+    #           "value":"7d",
+    #           "sentiment":"warning",
+    #           "warning":{
+    #              "value":"The Security Council can upgrade with no delay.",
+    #              "sentiment":"bad"
+    #           },
+    #           "description":"Non-emergency upgrades are initiated on L2 and go through a 8d delay. Since there is a 1d delay to force a tx (forcing the inclusion in the following state update), users have only 7d to exit. \n    \n  If users post a tx after that time, they would only be able to self propose a state root 12d 17h after the last state root was proposed and then wait for the 6d 8h challenge window, while the upgrade would be confirmed just after the 6d 8h challenge window and the 3d L1 timelock."
+    #        },
+    #        {
+    #           "name":"Proposer Failure",
+    #           "value":"Self propose",
+    #           "sentiment":"good",
+    #           "description":"Anyone can become a Proposer after 12d 17h of inactivity from the currently whitelisted Proposers."
+    #        }
+    #     ]
+    #   },
     
-    # tvl
-    if ">TVL</span" in project_source:
-      try:
-        project_risk["tvl"]["color"] = utilities.get_tvl_color(0)
-        tvl_str = project_source.split(">TVL</span")[1].split("</p>")[0].split("$")[-1]
-        if len(tvl_str) < 10:
-          project_risk["tvl"]["str"] = tvl_str
-          project_risk["tvl"]["val"] = utilities.convert_tvl(tvl_str)
-          project_risk["tvl"]["color"] = utilities.get_tvl_color(project_risk["tvl"]["val"])
-      except:
-        print(f"No TVL listed for {project}")
-    else:
-      scraping_errors["tvl"] += 1
+    if project["type"] == "layer2" and project["stage"] != "NotApplicable" and project["isArchived"] == False and project["isUpcoming"] == False:
+      l2_count += 1
+      project_risk = {
+        "id": project["id"],
+        "name": project["name"],
+        "type": project["category"],
+        "stage": { "status": None, "color": None, "score": 0 },
+        "state_validation": { "status": None, "color": None, "note": None, "score": 0 },
+        "data_availability": { "status": None, "color": None, "note": None, "score": 0 },
+        "exit_window": { "status": None, "color": None, "note": None, "score": 0 },
+        "sequencer_failure": { "status": None, "color": None, "note": None, "score": 0 },
+        "proposer_failure": { "status": None, "color": None, "note": None, "score": 0 },
+        "tvl": { "val": 0, "val_total": 0, "str": "0", "str_total": "0", "color": None },
+        "checkmarks": 0,
+        "score": 0
+      }
 
-    risk_data.append(project_risk)
+      # type
+      if "rollup" in project["category"].lower():
+        project["type"] = "rollup"
+      elif "validium" in project["category"].lower():
+        project["type"] = "validium"
 
+      # stage, score modifier
+      if project["isUnderReview"] == True:
+        project_risk["stage"]["status"] = "in review"
+        project_risk["stage"]["color"] = "muted"
+      else:
+        project_risk["stage"]["status"] = project["stage"].lower()
+        if project_risk["stage"]["status"] == "stage 0":
+          project_risk["stage"]["color"] = "danger"
+        elif project_risk["stage"]["status"] == "stage 1":
+          project_risk["stage"]["color"] = "warning"
+          project_risk["stage"]["score"] += 1.5
+          project_risk["score"] += 1.5
+        elif project_risk["stage"]["status"] == "stage 2":
+          project_risk["stage"]["color"] = "success"
+          project_risk["stage"]["score"] += 3
+          project_risk["score"] += 3
+        else:
+          project_risk["stage"]["status"] = "n/a"
+          project_risk["stage"]["color"] = "muted"
 
-  # check for scraping errors
-  for key, value in scraping_errors.items():
-    # if value > (len(projects) - l2_count):
-    if value/len(projects) > 0.75:
-      utilities.sendDiscordMsg(f"{key} scraping errors")
+      # risks, checkmarks, score
+      # no risk evaluations if in review
+      if project["isUnderReview"] == False:
+        for risk in project["risks"]:
+          # state_validation
+          if risk["name"] == "State Validation":
+            project_risk["state_validation"]["status"] = risk["name"]
+            project_risk["state_validation"]["color"] = utilities.get_risk_color(risk["sentiment"])
+            if "warning" in risk:
+              project_risk["state_validation"]["note"] = f"{risk['value']}: {risk['warning']['value']} {risk['description']}"
+            else:
+              project_risk["state_validation"]["note"] = f"{risk['value']}: {risk['description']}"
+            project_risk["state_validation"]["score"] = utilities.get_risk_score(risk["sentiment"])
+            if project_risk["state_validation"]["color"] == "success":
+              project_risk["checkmarks"] += 1
+            project_risk["score"] += project_risk["state_validation"]["score"]
+          # data_availability
+          elif risk["name"] == "Data Availability":
+            project_risk["data_availability"]["status"] = risk["name"]
+            project_risk["data_availability"]["color"] = utilities.get_risk_color(risk["sentiment"])
+            if "warning" in risk:
+              project_risk["data_availability"]["note"] = f"{risk['value']}: {risk['warning']['value']} {risk['description']}"
+            else:
+              project_risk["data_availability"]["note"] = f"{risk['value']}: {risk['description']}"
+            project_risk["data_availability"]["score"] = utilities.get_risk_score(risk["sentiment"])
+            if project_risk["data_availability"]["color"] == "success":
+              project_risk["checkmarks"] += 1
+            project_risk["score"] += project_risk["data_availability"]["score"]
+          # exit_window
+          elif risk["name"] == "Exit Window":
+            project_risk["exit_window"]["status"] = risk["name"]
+            project_risk["exit_window"]["color"] = utilities.get_risk_color(risk["sentiment"])
+            if "warning" in risk:
+              project_risk["exit_window"]["note"] = f"{risk['value']}: {risk['warning']['value']} {risk['description']}"
+            else:
+              project_risk["exit_window"]["note"] = f"{risk['value']}: {risk['description']}"
+            project_risk["exit_window"]["score"] = utilities.get_risk_score(risk["sentiment"])
+            if project_risk["exit_window"]["color"] == "success":
+              project_risk["checkmarks"] += 1
+            project_risk["score"] += project_risk["exit_window"]["score"]
+          # sequencer_failure
+          elif risk["name"] == "Sequencer Failure":
+            project_risk["sequencer_failure"]["status"] = risk["name"]
+            project_risk["sequencer_failure"]["color"] = utilities.get_risk_color(risk["sentiment"])
+            if "warning" in risk:
+              project_risk["sequencer_failure"]["note"] = f"{risk['value']}: {risk['warning']['value']} {risk['description']}"
+            else:
+              project_risk["sequencer_failure"]["note"] = f"{risk['value']}: {risk['description']}"
+            project_risk["sequencer_failure"]["score"] = utilities.get_risk_score(risk["sentiment"])
+            if project_risk["sequencer_failure"]["color"] == "success":
+              project_risk["checkmarks"] += 1
+            project_risk["score"] += project_risk["sequencer_failure"]["score"]
+          # proposer_failure
+          elif risk["name"] == "Proposer Failure":
+            project_risk["proposer_failure"]["status"] = risk["name"]
+            project_risk["proposer_failure"]["color"] = utilities.get_risk_color(risk["sentiment"])
+            if "warning" in risk:
+              project_risk["proposer_failure"]["note"] = f"{risk['value']}: {risk['warning']['value']} {risk['description']}"
+            else:
+              project_risk["proposer_failure"]["note"] = f"{risk['value']}: {risk['description']}"
+            project_risk["proposer_failure"]["score"] = utilities.get_risk_score(risk["sentiment"])
+            if project_risk["proposer_failure"]["color"] == "success":
+              project_risk["checkmarks"] += 1
+            project_risk["score"] += project_risk["proposer_failure"]["score"]
+          else:
+            utilities.report_error(f"Error: Unknown risk {risk['name']} for {project['id']}", context="set_project_risks")
+
+      # tvl
+      project_risk["tvl"]["val"] = project["tvl"]["breakdown"]["total"] - project["tvl"]["breakdown"]["associated"]
+      project_risk["tvl"]["val_total"] = project["tvl"]["breakdown"]["total"]
+      project_risk["tvl"]["str"] = utilities.convert_tvl(project_risk["tvl"]["val"])
+      project_risk["tvl"]["str_total"] = utilities.convert_tvl(project_risk["tvl"]["val_total"])
+      project_risk["tvl"]["color"] = utilities.get_tvl_color(project_risk["tvl"]["val"])
+
+      risk_data.append(project_risk)
 
 
   # save all data
   if not utilities.use_test_data:
-    utilities.save_to_file(f"_data/l2safety_all.json", {"epoch":utilities.current_time, "data":risk_data}, context=f"save_risk_data")
+    utilities.save_to_file(f"_data/l2safety_uncleaned.json", {"epoch":utilities.current_time, "data":risk_data}, context=f"save_risk_data")
 
 
   # clean data
-  # remove if not L2
-  risk_data = [project for project in risk_data if project["layer"] == "L2"]
   # remove if doesn't have at least 1 checkmark
   risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"]["status"] == "in review")]
   # sort by score then by tvl
@@ -189,7 +253,6 @@ def run_app():
     utilities.save_to_file(f"_data/l2safety.json", {"epoch":utilities.current_time, "data":risk_data}, context=f"save_risk_data")
   # utilities.pprint(risk_data)
   print(risk_data)
-  print(f"Project count: {len(projects)}")
   print(f"L2 count: {l2_count}")
 
       

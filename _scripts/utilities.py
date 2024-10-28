@@ -23,8 +23,8 @@ pp = pprint.PrettyPrinter(indent=4)
 use_test_data = False
 save_file = True
 # save_file = False
-# print_logs = True
-print_logs = False
+print_logs = True
+# print_logs = False
 pretty_print = False
 exit_on_fetch_error = False
 exit_on_save_error = False
@@ -208,48 +208,46 @@ def sendDiscordMsg(msg):
         print(error)
 
 
-def get_risk_color(content):
-  content = content.split(">")[0]
-  if "text-red" in content:
-    return "red"
-  elif "text-yellow" in content:
-    return "yellow"
+def get_risk_color(sentiment):
+  if sentiment == "good":
+    return "success"
+  elif sentiment == "warning":
+    return "warning"
+  elif sentiment == "bad":
+    return "danger"
   else:
-    return "white"
+    report_error(f"Error: Unknown sentiment {sentiment}", context="get_sentiment_color")
+    return "muted"
 
-
-def get_risk_score(color):
-  if color == "red":
+def get_risk_score(sentiment):
+  if sentiment == "bad":
     return 1
-  if color == "yellow":
+  if sentiment == "warning":
     return 2
-  if color == "white":
+  if sentiment == "good":
     return 3
 
 def get_tvl_color(tvl):
   if tvl < 5000000:
-    return "red"
+    return "danger"
   elif tvl < 100000000:
-    return "yellow"
+    return "warning"
   elif tvl < 500000000:
     return "white"
   else:
-    return "green"
+    return "success"
 
-
-def convert_tvl(tvl_str):
-  if len(tvl_str) > 10:
-    return 0
-  if " " in tvl_str:
-    val = tvl_str.split(" ")[0]
-    unit = tvl_str.split(" ")[1]
-    if unit.lower() == "k":
-      val = float(val) * 1000
-    if unit.lower() == "m":
-      val = float(val) * 1000000
-    if unit.lower() == "b":
-      val = float(val) * 1000000000
+def convert_tvl(tvl):
+  if tvl > 1000000000000: #trillion
+    return f"${str(round(tvl/1000000000000, 2))}T"
+  elif tvl > 1000000000: #billion
+    return f"${str(round(tvl/1000000000, 2))}B"
+  elif tvl > 1000000: #million
+    return f"${str(round(tvl/1000000, 2))}M"
+  elif tvl > 1000: #thousand
+    return f"${str(round(tvl/1000, 2))}K"
   else:
-    val = float(tvl_str)
-  return val
+    return f"${str(round(tvl))}"
+
+
 
