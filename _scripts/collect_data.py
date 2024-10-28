@@ -24,95 +24,95 @@ def run_app():
     project = summary_data["data"]["projects"][project_details]
     # print(project)
     # details example
-    #   {
-    #     "id":"arbitrum",
-    #     "name":"Arbitrum One",
-    #     "slug":"arbitrum",
-    #     "type":"layer2",
-    #     "category":"Optimistic Rollup",
-    #     "provider":"Arbitrum",
-    #     "purposes":[
-    #        "Universal"
-    #     ],
-    #     "isArchived":false,
-    #     "isUpcoming":false,
-    #     "isUnderReview":false,
-    #     "badges":[
-    #        {
-    #           "category":"Stack",
-    #           "name":"Nitro"
-    #        },
-    #        {
-    #           "category":"DA",
-    #           "name":"EthereumBlobs"
-    #        },
-    #        {
-    #           "category":"VM",
-    #           "name":"WasmVM"
-    #        },
-    #        {
-    #           "category":"Other",
-    #           "name":"Governance"
-    #        },
-    #        {
-    #           "category":"Other",
-    #           "name":"L3HostChain"
-    #        },
-    #        {
-    #           "category":"VM",
-    #           "name":"EVM"
-    #        }
-    #     ],
-    #     "tvl":{
-    #        "breakdown":{
-    #           "total":13388231113.45,
-    #           "ether":3950452687.39,
-    #           "stablecoin":4707391645.65,
-    #           "associated":2037539828.32
-    #        },
-    #        "associatedTokens":[
-    #           "ARB"
-    #        ],
-    #        "change7d":-0.026403164144550906
-    #     },
-    #     "stage":"Stage 1",
-    #     "risks":[
-    #        {
-    #           "name":"Sequencer Failure",
-    #           "value":"Self sequence",
-    #           "sentiment":"good",
-    #           "description":"In the event of a sequencer failure, users can force transactions to be included in the project's chain by sending them to L1. There is a 1d delay on this operation."
-    #        },
-    #        {
-    #           "name":"State Validation",
-    #           "value":"Fraud proofs (INT)",
-    #           "sentiment":"warning",
-    #           "description":"Fraud proofs allow 14 WHITELISTED actors watching the chain to prove that the state is incorrect. Interactive proofs (INT) require multiple transactions over time to resolve. There is a 6d 8h challenge period."
-    #        },
-    #        {
-    #           "name":"Data Availability",
-    #           "value":"Onchain",
-    #           "sentiment":"good",
-    #           "description":"All of the data needed for proof construction is published on Ethereum L1."
-    #        },
-    #        {
-    #           "name":"Exit Window",
-    #           "value":"7d",
-    #           "sentiment":"warning",
-    #           "warning":{
-    #              "value":"The Security Council can upgrade with no delay.",
-    #              "sentiment":"bad"
-    #           },
-    #           "description":"Non-emergency upgrades are initiated on L2 and go through a 8d delay. Since there is a 1d delay to force a tx (forcing the inclusion in the following state update), users have only 7d to exit. \n    \n  If users post a tx after that time, they would only be able to self propose a state root 12d 17h after the last state root was proposed and then wait for the 6d 8h challenge window, while the upgrade would be confirmed just after the 6d 8h challenge window and the 3d L1 timelock."
-    #        },
-    #        {
-    #           "name":"Proposer Failure",
-    #           "value":"Self propose",
-    #           "sentiment":"good",
-    #           "description":"Anyone can become a Proposer after 12d 17h of inactivity from the currently whitelisted Proposers."
-    #        }
-    #     ]
-    #   },
+      # {
+      #   "id":"arbitrum",
+      #   "name":"Arbitrum One",
+      #   "slug":"arbitrum",
+      #   "type":"layer2",
+      #   "category":"Optimistic Rollup",
+      #   "provider":"Arbitrum",
+      #   "purposes":[
+      #      "Universal"
+      #   ],
+      #   "isArchived":false,
+      #   "isUpcoming":false,
+      #   "isUnderReview":false,
+      #   "badges":[
+      #      {
+      #         "category":"Stack",
+      #         "name":"Nitro"
+      #      },
+      #      {
+      #         "category":"DA",
+      #         "name":"EthereumBlobs"
+      #      },
+      #      {
+      #         "category":"VM",
+      #         "name":"WasmVM"
+      #      },
+      #      {
+      #         "category":"Other",
+      #         "name":"Governance"
+      #      },
+      #      {
+      #         "category":"Other",
+      #         "name":"L3HostChain"
+      #      },
+      #      {
+      #         "category":"VM",
+      #         "name":"EVM"
+      #      }
+      #   ],
+      #   "tvl":{
+      #      "breakdown":{
+      #         "total":13388231113.45,
+      #         "ether":3950452687.39,
+      #         "stablecoin":4707391645.65,
+      #         "associated":2037539828.32
+      #      },
+      #      "associatedTokens":[
+      #         "ARB"
+      #      ],
+      #      "change7d":-0.026403164144550906
+      #   },
+      #   "stage":"Stage 1",
+      #   "risks":[
+      #      {
+      #         "name":"Sequencer Failure",
+      #         "value":"Self sequence",
+      #         "sentiment":"good",
+      #         "description":"In the event of a sequencer failure, users can force transactions to be included in the project's chain by sending them to L1. There is a 1d delay on this operation."
+      #      },
+      #      {
+      #         "name":"State Validation",
+      #         "value":"Fraud proofs (INT)",
+      #         "sentiment":"warning",
+      #         "description":"Fraud proofs allow 14 WHITELISTED actors watching the chain to prove that the state is incorrect. Interactive proofs (INT) require multiple transactions over time to resolve. There is a 6d 8h challenge period."
+      #      },
+      #      {
+      #         "name":"Data Availability",
+      #         "value":"Onchain",
+      #         "sentiment":"good",
+      #         "description":"All of the data needed for proof construction is published on Ethereum L1."
+      #      },
+      #      {
+      #         "name":"Exit Window",
+      #         "value":"7d",
+      #         "sentiment":"warning",
+      #         "warning":{
+      #            "value":"The Security Council can upgrade with no delay.",
+      #            "sentiment":"bad"
+      #         },
+      #         "description":"Non-emergency upgrades are initiated on L2 and go through a 8d delay. Since there is a 1d delay to force a tx (forcing the inclusion in the following state update), users have only 7d to exit. \n    \n  If users post a tx after that time, they would only be able to self propose a state root 12d 17h after the last state root was proposed and then wait for the 6d 8h challenge window, while the upgrade would be confirmed just after the 6d 8h challenge window and the 3d L1 timelock."
+      #      },
+      #      {
+      #         "name":"Proposer Failure",
+      #         "value":"Self propose",
+      #         "sentiment":"good",
+      #         "description":"Anyone can become a Proposer after 12d 17h of inactivity from the currently whitelisted Proposers."
+      #      }
+      #   ]
+      # },
     
     if project["type"] == "layer2" and project["stage"] != "NotApplicable" and project["isArchived"] == False and project["isUpcoming"] == False:
       l2_count += 1
@@ -225,11 +225,12 @@ def run_app():
             utilities.report_error(f"Error: Unknown risk {risk['name']} for {project['id']}", context="set_project_risks")
 
       # tvl
-      project_risk["tvl"]["val"] = project["tvl"]["breakdown"]["total"] - project["tvl"]["breakdown"]["associated"]
-      project_risk["tvl"]["val_total"] = project["tvl"]["breakdown"]["total"]
-      project_risk["tvl"]["str"] = utilities.convert_tvl(project_risk["tvl"]["val"])
-      project_risk["tvl"]["str_total"] = utilities.convert_tvl(project_risk["tvl"]["val_total"])
-      project_risk["tvl"]["color"] = utilities.get_tvl_color(project_risk["tvl"]["val"])
+      if "breakdown" in project["tvl"]:
+        project_risk["tvl"]["val"] = project["tvl"]["breakdown"]["total"] - project["tvl"]["breakdown"]["associated"]
+        project_risk["tvl"]["val_total"] = project["tvl"]["breakdown"]["total"]
+        project_risk["tvl"]["str"] = utilities.convert_tvl(project_risk["tvl"]["val"])
+        project_risk["tvl"]["str_total"] = utilities.convert_tvl(project_risk["tvl"]["val_total"])
+        project_risk["tvl"]["color"] = utilities.get_tvl_color(project_risk["tvl"]["val"])
 
       risk_data.append(project_risk)
 
