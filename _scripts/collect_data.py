@@ -63,7 +63,7 @@ def run_app():
       #         "name":"EVM"
       #      }
       #   ],
-      #   "tvl":{
+      #   "tvs":{
       #      "breakdown":{
       #         "total":13388231113.45,
       #         "ether":3950452687.39,
@@ -113,7 +113,7 @@ def run_app():
       #      }
       #   ]
       # },
-    
+
     if project["type"] == "layer2" and project["stage"] != "NotApplicable" and project["isArchived"] == False and project["isUpcoming"] == False:
       l2_count += 1
       project_risk = {
@@ -224,10 +224,10 @@ def run_app():
           else:
             utilities.report_error(f"Error: Unknown risk {risk['name']} for {project['id']}", context="set_project_risks")
 
-      # tvl
-      if "breakdown" in project["tvl"]:
-        project_risk["tvl"]["val"] = project["tvl"]["breakdown"]["total"] - project["tvl"]["breakdown"]["associated"]
-        project_risk["tvl"]["val_total"] = project["tvl"]["breakdown"]["total"]
+      # tvl (tvs according to l2beat)
+      if "breakdown" in project["tvs"]:
+        project_risk["tvl"]["val"] = project["tvs"]["breakdown"]["total"] - project["tvs"]["breakdown"]["associated"]
+        project_risk["tvl"]["val_total"] = project["tvs"]["breakdown"]["total"]
         project_risk["tvl"]["str"] = utilities.convert_tvl(project_risk["tvl"]["val"])
         project_risk["tvl"]["str_total"] = utilities.convert_tvl(project_risk["tvl"]["val_total"])
         project_risk["tvl"]["color"] = utilities.get_tvl_color(project_risk["tvl"]["val"])
@@ -243,9 +243,9 @@ def run_app():
   # clean data
   # remove if doesn't have at least 1 checkmark
   risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"]["status"] == "in review")]
-  # sort by score then by tvl
+  # sort by score then by tvs
   # risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvl"]["val"]), reverse=True)
-  # sort by tvl then by score
+  # sort by tvs then by score
   risk_data = sorted(risk_data, key=lambda project: (project["tvl"]["val"], project["score"]), reverse=True)
 
 
@@ -256,7 +256,7 @@ def run_app():
   print(risk_data)
   print(f"L2 count: {l2_count}")
 
-      
+
 
 
 run_app()
