@@ -227,27 +227,27 @@ def get_risk_score(sentiment):
   if sentiment == "good":
     return 3
 
-def get_tvl_color(tvl):
-  if tvl < 5000000:
+def get_tvs_color(tvs):
+  if tvs < 5000000:
     return "danger"
-  elif tvl < 100000000:
+  elif tvs < 100000000:
     return "warning"
-  elif tvl < 500000000:
+  elif tvs < 500000000:
     return "white"
   else:
     return "success"
 
-def convert_tvl(tvl):
-  if tvl > 1000000000000: #trillion
-    return f"${str(round(tvl/1000000000000, 2))}T"
-  elif tvl > 1000000000: #billion
-    return f"${str(round(tvl/1000000000, 2))}B"
-  elif tvl > 1000000: #million
-    return f"${str(round(tvl/1000000, 2))}M"
-  elif tvl > 1000: #thousand
-    return f"${str(round(tvl/1000, 2))}K"
+def convert_tvs(tvs):
+  if tvs > 1000000000000: #trillion
+    return f"${str(round(tvs/1000000000000, 2))}T"
+  elif tvs > 1000000000: #billion
+    return f"${str(round(tvs/1000000000, 2))}B"
+  elif tvs > 1000000: #million
+    return f"${str(round(tvs/1000000, 2))}M"
+  elif tvs > 1000: #thousand
+    return f"${str(round(tvs/1000, 2))}K"
   else:
-    return f"${str(round(tvl))}"
+    return f"${str(round(tvs))}"
 
 
 

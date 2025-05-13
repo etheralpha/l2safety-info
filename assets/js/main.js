@@ -69,7 +69,7 @@ function updateLinkTargets() {
 let sortOrder = {
   "l2": "descending",
   "score": "descending",
-  "tvl": "descending",
+  "tvs": "descending",
   "type": "descending",
   "stateValidation": "descending",
   "dataAvailability": "descending",
@@ -116,7 +116,7 @@ function sortTable(sortEl, sortType, colNum) {
     // update table with sorted rows
     table.replaceChildren(...originalRows);
   } else {
-    // hack for TVL since won't sort properly but it's already sorted so just need to reverse if ascending
+    // hack for TVS since won't sort properly but it's already sorted so just need to reverse if ascending
     if (colNum == 2) {
       if (sortOrder[sortType] == "ascending") {
         rows.reverse();

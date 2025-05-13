@@ -1,4 +1,5 @@
 *~
+_scripts/venv
 _scripts/.env
 **/.env
 __pycache__
@@ -12,3 +13,5 @@ vendor
 .DS_Store
 *.DS_Store
 **/.DS_Store
+_scripts/venv
+notes.txt

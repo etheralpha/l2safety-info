@@ -34,8 +34,8 @@ layout: default
                     </span>
                   </th>
                   <th scope="col">
-                    TVL
-                    <span class="sort" onclick="sortTable(this, 'tvl', 2)">
+                    TVS
+                    <span class="sort" onclick="sortTable(this, 'tvs', 2)">
                       {{site.data.icons.sort}}
                     </span>
                   </th>
@@ -120,7 +120,7 @@ layout: default
                         {{l2.name | replace: "-", " "}}
                       </a>
                     </td>
-                    <td class="text-{{l2.tvl.color}} {{color}}">{{l2.tvl.str}}</td>
+                    <td class="text-{{l2.tvs.color}} {{color}}">{{l2.tvs.str}}</td>
                     <td data-sort={{l2.state_validation.score}}>
                       <img src="assets/img/symbol-{{l2.state_validation.color}}.png" 
                           data-bs-toggle="tooltip" data-bs-title="{{l2.state_validation.note}}&#8203;">

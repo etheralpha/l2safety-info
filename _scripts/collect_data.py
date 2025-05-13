@@ -126,7 +126,7 @@ def run_app():
         "exit_window": { "status": None, "color": None, "note": None, "score": 0 },
         "sequencer_failure": { "status": None, "color": None, "note": None, "score": 0 },
         "proposer_failure": { "status": None, "color": None, "note": None, "score": 0 },
-        "tvl": { "val": 0, "val_total": 0, "str": "0", "str_total": "0", "color": None },
+        "tvs": { "val": 0, "val_total": 0, "str": "0", "str_total": "0", "color": None },
         "checkmarks": 0,
         "score": 0
       }
@@ -224,13 +224,13 @@ def run_app():
           else:
             utilities.report_error(f"Error: Unknown risk {risk['name']} for {project['id']}", context="set_project_risks")
 
-      # tvl (tvs according to l2beat)
+      # tvs
       if "breakdown" in project["tvs"]:
-        project_risk["tvl"]["val"] = project["tvs"]["breakdown"]["total"] - project["tvs"]["breakdown"]["associated"]
-        project_risk["tvl"]["val_total"] = project["tvs"]["breakdown"]["total"]
-        project_risk["tvl"]["str"] = utilities.convert_tvl(project_risk["tvl"]["val"])
-        project_risk["tvl"]["str_total"] = utilities.convert_tvl(project_risk["tvl"]["val_total"])
-        project_risk["tvl"]["color"] = utilities.get_tvl_color(project_risk["tvl"]["val"])
+        project_risk["tvs"]["val"] = project["tvs"]["breakdown"]["total"] - project["tvs"]["breakdown"]["associated"]
+        project_risk["tvs"]["val_total"] = project["tvs"]["breakdown"]["total"]
+        project_risk["tvs"]["str"] = utilities.convert_tvs(project_risk["tvs"]["val"])
+        project_risk["tvs"]["str_total"] = utilities.convert_tvs(project_risk["tvs"]["val_total"])
+        project_risk["tvs"]["color"] = utilities.get_tvs_color(project_risk["tvs"]["val"])
 
       risk_data.append(project_risk)
 
@@ -244,9 +244,9 @@ def run_app():
   # remove if doesn't have at least 1 checkmark
   risk_data = [project for project in risk_data if (project["checkmarks"] > 0 or project["stage"]["status"] == "in review")]
   # sort by score then by tvs
-  # risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvl"]["val"]), reverse=True)
+  # risk_data = sorted(risk_data, key=lambda project: (project["score"], project["tvs"]["val"]), reverse=True)
   # sort by tvs then by score
-  risk_data = sorted(risk_data, key=lambda project: (project["tvl"]["val"], project["score"]), reverse=True)
+  risk_data = sorted(risk_data, key=lambda project: (project["tvs"]["val"], project["score"]), reverse=True)
 
 
   # save filtered/sorted data
