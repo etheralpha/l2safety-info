@@ -19,6 +19,22 @@
   --bs-danger: var(--l2s-danger);
   --bs-light: var(--l2s-light);
   --bs-dark: var(--l2s-dark);
+
+  /*blue scheme*/
+  /*
+  --l2s-bg-primary: #121e35 !important;
+  --l2s-bg-body: #0f1b2d !important;
+  --l2s-bg-secondary: #bdc8ff17 !important;
+  --l2s-radius: 0.5625rem !important;
+  --l2s-success: #23e19d !important;
+  --l2s-warning: #ffcd56 !important;
+  --l2s-danger: #ff6384 !important;
+  --l2s-light: #f8f9fa !important;
+  --l2s-dark: #212529 !important;
+  --l2s-gray: #6c757d !important;
+  --bs-success: var(--l2s-success) !important;
+  --bs-warning: var(--l2s-warning) !important;
+  --bs-danger: var(--l2s-danger) !important;*/
 }
 
 
